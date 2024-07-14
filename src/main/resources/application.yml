@@ -1,0 +1,8 @@
+app:
+  title: "Users data"
+
+login:
+  admin:
+    username: "admin"
+    password: "adminboss"
+
