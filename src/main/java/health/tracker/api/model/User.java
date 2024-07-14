@@ -34,6 +34,16 @@ public class User {
     @Field("Age")
     private Integer age;
 
+    public User(String id, String firstName, String email, String lastName, String password, Gender gender, Integer age) {
+        this.id = id;
+        this.firstName = firstName;
+        this.email = email;
+        this.lastName = lastName;
+        this.password = password;
+        this.gender = gender;
+        this.age = age;
+    }
+
     public String getId() {
         return id;
     }
