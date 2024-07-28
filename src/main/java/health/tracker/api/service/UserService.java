@@ -2,10 +2,10 @@ package health.tracker.api.service;
 
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
-import health.tracker.api.model.User;
+import health.tracker.api.domain.User;
+import health.tracker.api.repository.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import health.tracker.api.repository.UserRepository;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -119,19 +119,13 @@ public class UserService {
         Matcher matcher1 = pattern2.matcher(password);
         Matcher matcher2 = pattern3.matcher(password);
 
-        if(matcher.find() && matcher1.find() && matcher2.find()) {
-            return true;
-        }
-        return false;
+        return matcher.find() && matcher1.find() && matcher2.find();
     }
 
     private boolean checkEmail(String email) {
         String emailSpecial = "@yahoo.com";
         Pattern pattern = Pattern.compile(emailSpecial);
         Matcher matcher = pattern.matcher(email);
-        if(matcher.find()) {
-            return true;
-        }
-        return false;
+        return matcher.find();
     }
 }

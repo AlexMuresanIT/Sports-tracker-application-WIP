@@ -1,9 +1,11 @@
 package health.tracker.api.service;
 
 import health.tracker.api.TestUtil;
+import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.repository.UserRepository;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,11 +33,6 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @BeforeEach
-    void setUp() {
-        //userRepository.save(TestUtil.getUser());
-    }
-
     @Test
     @DisplayName("Test that user is saved to db")
     void testThatUserIsSaved() {
@@ -44,6 +41,17 @@ public class UserServiceTest {
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getId()).isEqualTo("id");
         assertThat(savedUser.getEmail()).isEqualTo("email");
+    }
+
+    @Test
+    @DisplayName("User with incorrect password is not saved")
+    void testUserWithIncorrectPasswordNotSaved() {
+        try{
+            userService.addUser(TestUtil.userWithWrongPw());
+        }catch (InvalidData e){
+            assertThat(e).isInstanceOf(InvalidData.class);
+            assertThat(e.getMessage()).isEqualTo("Invalid password or email. Try again");
+        }
     }
 
     @Test
@@ -61,5 +69,34 @@ public class UserServiceTest {
     void testThatUserWithSpecificEmailIsDeleted() {
         when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
         assertThrows(NoUserFoundException.class, () -> userService.getByEmail("email"));
+    }
+
+    @Test
+    @DisplayName("Updated password is incorrect")
+    void testUserUpdatedPasswordIsIncorrect() {
+        when(userRepository.findByEmail("email")).thenReturn(Optional.of(TestUtil.getUser()));
+        try{
+            userService.updateUserPassword("email","dada");
+        }catch (InvalidData e){
+            assertThat(e).isInstanceOf(InvalidData.class);
+            assertThat(e.getMessage()).isEqualTo("Invalid password. Try again");
+        }
+    }
+
+    @Test
+    @DisplayName("Updated email is incorrect")
+    void testUserUpdatesEmailIsIncorrect() {
+        when(userRepository.findByEmail("email")).thenReturn(Optional.of(TestUtil.getUser()));
+        try{
+            userService.updateUserEmail("email","dada");
+        }catch (InvalidData e){
+            assertThat(e).isInstanceOf(InvalidData.class);
+            assertThat(e.getMessage()).isEqualTo("Invalid email. Try again");
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
     }
 }

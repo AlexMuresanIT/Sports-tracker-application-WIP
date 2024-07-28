@@ -1,4 +1,4 @@
-package health.tracker.api.model;
+package health.tracker.api.domain;
 
 public enum Gender {
 
