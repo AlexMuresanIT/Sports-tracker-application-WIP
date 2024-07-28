@@ -2,8 +2,9 @@ package health.tracker.api.controller.rest;
 
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
-import health.tracker.api.model.User;
-import health.tracker.api.model.UserDTO;
+import health.tracker.api.domain.User;
+import health.tracker.api.domain.UserDTO;
+import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import health.tracker.api.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class UserController {
     public ResponseEntity<String> register(@RequestBody User user) {
         try{
             userService.addUser(user);
-            return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+            return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
         }catch (InvalidData e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -65,7 +65,7 @@ public class UserController {
     public ResponseEntity<String> updateUserAge(@PathVariable String email, @PathVariable Integer age) {
         try{
             userService.updateUserAge(email, age);
-            return new ResponseEntity<>("Age updated", HttpStatus.OK);
+            return new ResponseEntity<>("Age updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
@@ -85,7 +85,7 @@ public class UserController {
     public ResponseEntity<String> updateUserEmail(@PathVariable String email, @PathVariable String newEmail) {
         try{
             userService.updateUserEmail(email, newEmail);
-            return new ResponseEntity<>("Email updated", HttpStatus.OK);
+            return new ResponseEntity<>("Email updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
@@ -95,14 +95,14 @@ public class UserController {
     public ResponseEntity<String> deleteUserById(@PathVariable String id) {
         log.info("Deleting user by id: {}", id);
         userService.deleteUserById(id);
-        return new ResponseEntity<>("User deleted", HttpStatus.OK);
+        return new ResponseEntity<>("User deleted.", HttpStatus.OK);
     }
 
     @DeleteMapping("/user/deleteE/{email}")
     public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {
         log.info("Deleting user by email: {}", email);
         userService.deleteUserByEmail(email);
-        return new ResponseEntity<>("User deleted", HttpStatus.OK);
+        return new ResponseEntity<>("User deleted.", HttpStatus.OK);
     }
 
     @GetMapping("/all")

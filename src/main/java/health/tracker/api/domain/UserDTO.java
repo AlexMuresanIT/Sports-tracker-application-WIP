@@ -1,4 +1,4 @@
-package health.tracker.api.model;
+package health.tracker.api.domain;
 
 public class UserDTO {
 
@@ -16,6 +16,9 @@ public class UserDTO {
         this.email = user.getEmail();
         this.gender = user.getGender();
         this.age = user.getAge();
+    }
+
+    public UserDTO() {
     }
 
     public String getId() {

@@ -1,6 +1,6 @@
 package health.tracker.api.repository;
 
-import health.tracker.api.model.User;
+import health.tracker.api.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

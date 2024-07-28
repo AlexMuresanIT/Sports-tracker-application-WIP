@@ -1,13 +1,9 @@
-package health.tracker.api.model;
+package health.tracker.api.domain;
 
-import com.fasterxml.jackson.databind.annotation.EnumNaming;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.Enumeration;
 
 @Document("users")
 public class User {
