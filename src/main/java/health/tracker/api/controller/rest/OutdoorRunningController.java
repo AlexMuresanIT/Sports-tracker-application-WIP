@@ -19,8 +19,12 @@ public class OutdoorRunningController {
 
     @PostMapping("/addRecord")
     public ResponseEntity<String> addOutdoorRunningRecord(@RequestBody final OutdoorRunning outdoorRunning) {
-        outdoorRunningService.addOutdoorRunningRecord(outdoorRunning);
-        return ResponseEntity.ok("Successfully added outdoor running record");
+        try{
+            outdoorRunningService.addOutdoorRunningRecord(outdoorRunning);
+            return ResponseEntity.ok("Successfully added outdoor running record");
+        }catch (NoUserFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/recordsOf/{email}")
@@ -37,5 +41,11 @@ public class OutdoorRunningController {
     public ResponseEntity<List<OutdoorRunning>> getAllOutdoorRunningRecords() {
         final var allRecords = outdoorRunningService.getAllRecords();
         return ResponseEntity.ok(allRecords);
+    }
+
+    @GetMapping("/best/{email}")
+    public ResponseEntity<OutdoorRunning> getBestRecordForUser(@PathVariable final String email) {
+        final var bestRecord = outdoorRunningService.bestRecordForTheUser(email);
+        return ResponseEntity.ok(bestRecord);
     }
 }

@@ -81,4 +81,17 @@ public class OutdoorRunning {
     public void setAverageSpeed(Double averageSpeed) {
         this.averageSpeed = averageSpeed;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("OutdoorRunning{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", userEmail='").append(userEmail).append('\'');
+        sb.append(", distance=").append(distance);
+        sb.append(", time='").append(time).append('\'');
+        sb.append(", burnedCalories=").append(burnedCalories);
+        sb.append(", averageSpeed=").append(averageSpeed);
+        sb.append('}');
+        return sb.toString();
+    }
 }
