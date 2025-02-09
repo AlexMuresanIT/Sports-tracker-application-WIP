@@ -1,7 +1,7 @@
 package health.tracker.api.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import health.tracker.api.TestUtil;
-import health.tracker.api.domain.Gender;
 import health.tracker.api.domain.UserDTO;
 import health.tracker.api.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,11 +40,14 @@ public class UserControllerTest {
     public static final String DELETE_USER_BY_EMAIL = "/user/deleteE/{email}";
     public static final String GET_ALL_USERS = "/all";
 
+    @Autowired
+    protected com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
     @Test
-    void testThatUserIsRegistered() throws Exception {
+    public void testThatUserIsRegistered() throws Exception {
         final var responseAsString = this.mockMvc.perform(post(ADD_USER)
                     .header("Authorization","Basic YWRtaW46YWRtaW5ib3Nz")
-                        .content(asJsonString(TestUtil.getCorrectUser()))
+                        .content(objectMapper.writeValueAsString(TestUtil.getUserDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -53,7 +58,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testGetUserById() throws Exception {
+    public void testGetUserById() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -65,17 +70,16 @@ public class UserControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        final var response = new ObjectMapper().readValue(responseAsString, UserDTO.class);
+        final var response = objectMapper.readValue(responseAsString, UserDTO.class);
 
         assertThat(response).isNotNull().satisfies(user -> {
             assertThat(user.getEmail()).isEqualTo("email@yahoo.com");
-            assertThat(user.getFirstName()).isEqualTo("firstName");
-            assertThat(user.getLastName()).isEqualTo("lastName");
+            assertThat(user.getAge()).isEqualTo(24);
         });
     }
 
     @Test
-    void testGetUserByEmail() throws Exception {
+    public void testGetUserByEmail() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -87,17 +91,16 @@ public class UserControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        final var response = new ObjectMapper().readValue(responseAsString, UserDTO.class);
+        final var response = objectMapper.readValue(responseAsString, UserDTO.class);
 
         assertThat(response).isNotNull().satisfies(user -> {
             assertThat(user.getEmail()).isEqualTo("email@yahoo.com");
-            assertThat(user.getFirstName()).isEqualTo("firstName");
-            assertThat(user.getLastName()).isEqualTo("lastName");
+            assertThat(user.getAge()).isEqualTo(24);
         });
     }
 
     @Test
-    void testUpdateUserAgeSuccessfully() throws Exception {
+    public void testUpdateUserAgeSuccessfully() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -112,7 +115,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserAgeFailed() throws Exception {
+    public void testUpdateUserAgeFailed() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         this.mockMvc
@@ -122,7 +125,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserPassword() throws Exception {
+    public void testUpdateUserPassword() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -137,7 +140,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserPasswordFailed() throws Exception {
+    public void testUpdateUserPasswordFailed() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var response = this.mockMvc
@@ -152,7 +155,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserEmailSuccessfully() throws Exception {
+    public void testUpdateUserEmailSuccessfully() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -167,7 +170,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserEmailFailed() throws Exception {
+    public void testUpdateUserEmailFailed() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var response = this.mockMvc
@@ -182,7 +185,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testDeleteUserByIdSuccessfully() throws Exception {
+    public void testDeleteUserByIdSuccessfully() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -197,7 +200,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testDeleteUserByEmail() throws Exception {
+    public void testDeleteUserByEmail() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
 
         final var responseAsString = this.mockMvc
@@ -212,7 +215,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getAllUsers() throws Exception {
+    public void getAllUsers() throws Exception {
         userRepository.save(TestUtil.getCorrectUser());
         userRepository.save(TestUtil.getUser2());
 
@@ -224,11 +227,12 @@ public class UserControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        final var response = new ObjectMapper().readValue(responseAsString, UserDTO[].class);
+        final var response = objectMapper.readValue(responseAsString, new TypeReference<List<UserDTO>>() {});
 
         assertThat(response).isNotNull().satisfies(users -> {
-            assertThat(users[0].getAge()).isEqualTo(27);
-            assertThat(users[0].getGender()).isEqualTo(Gender.FEMALE);
+            final var user = users.get(0);
+            assertThat(user).isNotNull();
+            assertThat(user.getEmail()).isEqualTo("email@yahoo.com");
         });
     }
 

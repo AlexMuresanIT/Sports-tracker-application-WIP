@@ -30,18 +30,12 @@ public class UserService {
 
     public User getById(String id) {
         final var user = userRepository.findById(id);
-        if(user.isPresent()) {
-            return user.get();
-        }
-        throw new NoUserFoundException("No user found with id " + id);
+        return user.orElseThrow(() -> new NoUserFoundException("No user found with id " + id));
     }
 
     public User getByEmail(String email) {
         final var maybeUser = userRepository.findByEmail(email);
-        if(maybeUser.isPresent()) {
-            return maybeUser.get();
-        }
-        throw new NoUserFoundException("No user found with email " + email);
+        return maybeUser.orElseThrow(() -> new NoUserFoundException("No user found with email " + email));
     }
 
     public List<User> getAllUsers() {
