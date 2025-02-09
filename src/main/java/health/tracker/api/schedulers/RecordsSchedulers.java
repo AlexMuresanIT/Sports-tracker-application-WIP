@@ -26,7 +26,7 @@ public class RecordsSchedulers {
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
-    public void outputBestRecordOfAUser() {
+    public void outputBestRecordOfAUser() throws Exception {
         final var userEmail = getRandomEmail();
         final var record = outdoorRunningService.bestRecordForTheUser(userEmail);
         if(record != null) {

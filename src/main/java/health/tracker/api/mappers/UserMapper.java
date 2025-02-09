@@ -5,6 +5,7 @@ import health.tracker.api.domain.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,8 +17,6 @@ public interface UserMapper {
     @Mapping(target = "name", expression = "java(user.getFirstName() + ' ' + user.getLastName())")
     @Mapping(target = "password", expression = "java(user.getPassword())")
     UserDTO toDTO(final User user);
-
-    List<UserDTO> toDTOs(final List<User> users);
 
     @Mapping(target = "firstName", expression = "java(getFirstNameFromDTO(userDTO.getName()))")
     @Mapping(target = "lastName", expression = "java(getLastNameFromDTO(userDTO.getName()))")
