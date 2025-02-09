@@ -6,3 +6,5 @@ login:
     username: "admin"
     password: "adminboss"
 
+scheduling:
+  enable: true
