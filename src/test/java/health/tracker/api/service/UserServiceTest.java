@@ -40,7 +40,7 @@ public class UserServiceTest {
         final var savedUser = userService.getById("id");
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getId()).isEqualTo("id");
-        assertThat(savedUser.getEmail()).isEqualTo("email");
+        assertThat(savedUser.getEmail()).isEqualTo("email@yahoo.com");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class UserServiceTest {
         final var savedUser = userService.getByEmail("email");
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getId()).isEqualTo("id");
-        assertThat(savedUser.getEmail()).isEqualTo("email");
+        assertThat(savedUser.getEmail()).isEqualTo("email@yahoo.com");
     }
 
     @Test
