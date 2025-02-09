@@ -3,6 +3,7 @@ package health.tracker.api;
 import health.tracker.api.domain.Gender;
 import health.tracker.api.domain.OutdoorRunning;
 import health.tracker.api.domain.User;
+import health.tracker.api.domain.UserDTO;
 
 public class TestUtil {
     private static final String ID = "12345";
@@ -39,6 +40,16 @@ public class TestUtil {
                 "lastName007!",
                 Gender.MALE,
                 24);
+    }
+
+    public static UserDTO getUserDTO() {
+        return new UserDTO(
+                "id",
+                "firstName",
+                MAIL+"da",
+                Gender.MALE,
+                24,
+                "asdadaA4!");
     }
 
     public static User getUser2() {

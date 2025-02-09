@@ -4,6 +4,7 @@ import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.domain.User;
 import health.tracker.api.domain.UserDTO;
+import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,22 +18,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RestController
 public class UserController {
-
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(final UserService userService, final UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody UserDTO user) {
         try{
-            userService.addUser(user);
+            userService.addUser(userMapper.toDomain(user));
             return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
         }catch (InvalidData e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -43,8 +44,8 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         log.info("Getting user by id: {}", id);
         try{
-            final var maybeUser = userService.getById(id);
-            return new ResponseEntity<>(convertUserToDTO(maybeUser), HttpStatus.OK);
+            final var user = userService.getById(id);
+            return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
         }catch (NoUserFoundException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -54,8 +55,8 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
         log.info("Getting user by email: {}", email);
         try{
-            final var maybeUser = userService.getByEmail(email);
-            return new ResponseEntity<>(convertUserToDTO(maybeUser), HttpStatus.OK);
+            final var user = userService.getByEmail(email);
+            return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
         }catch (NoUserFoundException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -108,23 +109,11 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         log.info("Getting all users");
-        return new ResponseEntity<>(convertUserToDTO(userService.getAllUsers()), HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.toDTOs(userService.getAllUsers()), HttpStatus.OK);
     }
 
     @GetMapping("/logged")
     public ResponseEntity<String> currentUser(@AuthenticationPrincipal UserDetails user) {
-        return new ResponseEntity<>("Current role: "+user.getUsername(), HttpStatus.OK);
-    }
-
-    private UserDTO convertUserToDTO(User user) {
-        return new UserDTO(user);
-    }
-
-    private List<UserDTO> convertUserToDTO(List<User> users) {
-        List<UserDTO> userDTOs = new ArrayList<>();
-        for (User user : users) {
-            userDTOs.add(convertUserToDTO(user));
-        }
-        return userDTOs;
+        return new ResponseEntity<>("Current role: " + user.getUsername(), HttpStatus.OK);
     }
 }

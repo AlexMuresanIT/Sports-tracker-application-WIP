@@ -3,22 +3,20 @@ package health.tracker.api.domain;
 public class UserDTO {
 
     private  String id;
-    private  String firstName;
-    private  String lastName;
+    private  String name;
     private  String email;
     private  Gender gender;
     private  Integer age;
+    private String password;
 
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.gender = user.getGender();
-        this.age = user.getAge();
-    }
 
-    public UserDTO() {
+    public UserDTO(final String id, final String name, final String email, final Gender gender, final Integer age, final String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.age = age;
+        this.password = password;
     }
 
     public String getId() {
@@ -29,20 +27,12 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -67,5 +57,13 @@ public class UserDTO {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
