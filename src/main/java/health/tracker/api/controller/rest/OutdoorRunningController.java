@@ -19,22 +19,16 @@ public class OutdoorRunningController {
 
     @PostMapping("/addRecord")
     public ResponseEntity<String> addOutdoorRunningRecord(@RequestBody final OutdoorRunning outdoorRunning) {
-        try{
-            outdoorRunningService.addOutdoorRunningRecord(outdoorRunning);
-            return ResponseEntity.ok("Successfully added outdoor running record");
-        }catch (NoUserFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        outdoorRunningService.addOutdoorRunningRecord(outdoorRunning);
+        return ResponseEntity.ok("Successfully added outdoor running record");
     }
 
     @GetMapping("/recordsOf/{email}")
     public ResponseEntity<List<OutdoorRunning>> getAllOutdoorRunningRecordsOfAnUser(@PathVariable final String email) {
-        try{
-            final var records = outdoorRunningService.getAllOutdoorRunningRecordsOfAnUser(email);
-            return ResponseEntity.ok(records);
-        }catch (NoUserFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        final var records = outdoorRunningService.getAllOutdoorRunningRecordsOfAnUser(email);
+        return records.isEmpty()
+                ? ResponseEntity.ok(records)
+                : ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/allRecords")
@@ -44,8 +38,12 @@ public class OutdoorRunningController {
     }
 
     @GetMapping("/best/{email}")
-    public ResponseEntity<OutdoorRunning> getBestRecordForUser(@PathVariable final String email) {
-        final var bestRecord = outdoorRunningService.bestRecordForTheUser(email);
-        return ResponseEntity.ok(bestRecord);
+    public ResponseEntity<OutdoorRunning> getBestRecordForUser(@PathVariable final String email) throws Exception {
+        try {
+            final var bestRecord = outdoorRunningService.bestRecordForTheUser(email);
+            return ResponseEntity.ok(bestRecord);
+        } catch (final Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

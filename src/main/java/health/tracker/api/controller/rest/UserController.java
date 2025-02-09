@@ -8,6 +8,7 @@ import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +35,9 @@ public class UserController {
     public ResponseEntity<String> register(@RequestBody UserDTO user) {
         try{
             userService.addUser(userMapper.toDomain(user));
-            return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
+            return ResponseEntity.ok("User registered successfully.");
         }catch (InvalidData e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -45,9 +46,9 @@ public class UserController {
         log.info("Getting user by id: {}", id);
         try{
             final var user = userService.getById(id);
-            return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
+            return ResponseEntity.ok(userMapper.toDTO(user));
         }catch (NoUserFoundException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -56,20 +57,16 @@ public class UserController {
         log.info("Getting user by email: {}", email);
         try{
             final var user = userService.getByEmail(email);
-            return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
+            return ResponseEntity.ok(userMapper.toDTO(user));
         }catch (NoUserFoundException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/user/updateAge/{email}/{age}")
     public ResponseEntity<String> updateUserAge(@PathVariable String email, @PathVariable Integer age) {
-        try{
-            userService.updateUserAge(email, age);
-            return new ResponseEntity<>("Age updated.", HttpStatus.OK);
-        }catch (NoUserFoundException | InvalidData e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-        }
+        userService.updateUserAge(email, age);
+        return ResponseEntity.ok("User updated successfully.");
     }
 
     @PutMapping("/user/updatePassword/{email}/{password}")
@@ -78,7 +75,7 @@ public class UserController {
             userService.updateUserPassword(email, password);
             return new ResponseEntity<>("Password updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -88,7 +85,7 @@ public class UserController {
             userService.updateUserEmail(email, newEmail);
             return new ResponseEntity<>("Email updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -96,24 +93,25 @@ public class UserController {
     public ResponseEntity<String> deleteUserById(@PathVariable String id) {
         log.info("Deleting user by id: {}", id);
         userService.deleteUserById(id);
-        return new ResponseEntity<>("User deleted.", HttpStatus.OK);
+        return ResponseEntity.ok("User deleted.");
     }
 
     @DeleteMapping("/user/deleteE/{email}")
     public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {
         log.info("Deleting user by email: {}", email);
         userService.deleteUserByEmail(email);
-        return new ResponseEntity<>("User deleted.", HttpStatus.OK);
+        return ResponseEntity.ok("User deleted.");
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<Page<UserDTO>> getAllUsers() {
         log.info("Getting all users");
-        return new ResponseEntity<>(userMapper.toDTOs(userService.getAllUsers()), HttpStatus.OK);
+        final var users = userService.getAllUsersPaginated();
+        return ResponseEntity.ok(userService.convertUserToDTO(users));
     }
 
     @GetMapping("/logged")
     public ResponseEntity<String> currentUser(@AuthenticationPrincipal UserDetails user) {
-        return new ResponseEntity<>("Current role: " + user.getUsername(), HttpStatus.OK);
+        return ResponseEntity.ok("Current user " + user.getUsername());
     }
 }

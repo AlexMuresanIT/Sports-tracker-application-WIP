@@ -1,9 +1,13 @@
 package health.tracker.api.service;
 
+import health.tracker.api.domain.UserDTO;
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.domain.User;
+import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +19,14 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(final UserRepository userRepository, final UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
-    public void addUser(User user) {
+    public void addUser(final User user) {
         if(checkPw(user.getPassword()) && checkEmail(user.getEmail())){
             userRepository.save(user);
             return;
@@ -28,35 +34,35 @@ public class UserService {
         throw new InvalidData("Invalid password or email. Try again");
     }
 
-    public User getById(String id) {
+    public User getById(final String id) {
         final var user = userRepository.findById(id);
         return user.orElseThrow(() -> new NoUserFoundException("No user found with id " + id));
     }
 
-    public User getByEmail(String email) {
+    public User getByEmail(final String email) {
         final var maybeUser = userRepository.findByEmail(email);
         return maybeUser.orElseThrow(() -> new NoUserFoundException("No user found with email " + email));
     }
 
+    public Page<User> getAllUsersPaginated() {
+        final var pageable = PageRequest.of(0, 10, Sort.by("firstName"));
+        return userRepository.findAll(pageable);
+    }
+
     public List<User> getAllUsers() {
-        return userRepository.findAll(sortByIdAsc());
+        return userRepository.findAll();
     }
 
-    public void updateUserAge(String email, Integer age) {
+    public void updateUserAge(final String email, final Integer age) {
         final var maybeUser = userRepository.findByEmail(email);
-        if(maybeUser.isPresent()) {
-            if(age >= maybeUser.get().getAge()) {
-                final var user = maybeUser.get();
-                user.setAge(age);
-                userRepository.save(user);
-                return;
-            }
-            throw new InvalidData("You cannot enter an age smaller than existing one.");
-        }
-        throw new NoUserFoundException("No user found with email " + email);
+        maybeUser.map(foundUser -> {
+            foundUser.setAge(age);
+            userRepository.save(foundUser);
+            return null;
+        });
     }
 
-    public void updateUserPassword(String email, String password) {
+    public void updateUserPassword(final String email, final String password) {
         final var maybeUser = userRepository.findByEmail(email);
         if(maybeUser.isPresent()) {
             if(checkPw(password)) {
@@ -70,7 +76,7 @@ public class UserService {
         throw new NoUserFoundException("No user found with email " + email);
     }
 
-    public void updateUserEmail(String email, String newEmail) {
+    public void updateUserEmail(final String email, final String newEmail) {
         final var maybeUser = userRepository.findByEmail(email);
         if(maybeUser.isPresent()) {
             if(checkEmail(newEmail) && !email.equals(newEmail)) {
@@ -84,30 +90,26 @@ public class UserService {
         throw new NoUserFoundException("No user found with email " + email);
     }
 
-    public void deleteUserById(String id) {
+    public void deleteUserById(final String id) {
         userRepository.deleteById(id);
     }
 
-    public void deleteUserByEmail(String email) {
+    public void deleteUserByEmail(final String email) {
         userRepository.deleteByEmail(email);
     }
 
-    private Sort sortByIdAsc() {
-        return Sort.by(Sort.Direction.ASC, "id");
+    public Page<UserDTO> convertUserToDTO(final Page<User> users) {
+        return users.map(userMapper::toDTO);
     }
 
-    private boolean checkPw(String password) {
+    private boolean checkPw(final String password) {
         if(password.length() < 8) {
             return false;
         }
 
-        String specialCharacters = "[!@#$%^&?]";
-        String capitalLetter = "[A-Z]";
-        String numbers = "[0-9]";
-
-        Pattern pattern1 = Pattern.compile(specialCharacters);
-        Pattern pattern2 = Pattern.compile(capitalLetter);
-        Pattern pattern3 = Pattern.compile(numbers);
+        Pattern pattern1 = Pattern.compile("[!@#$%^&?]");
+        Pattern pattern2 = Pattern.compile("[A-Z]");
+        Pattern pattern3 = Pattern.compile("[0-9]");
 
         Matcher matcher = pattern1.matcher(password);
         Matcher matcher1 = pattern2.matcher(password);
@@ -116,9 +118,8 @@ public class UserService {
         return matcher.find() && matcher1.find() && matcher2.find();
     }
 
-    private boolean checkEmail(String email) {
-        String emailSpecial = "@yahoo.com";
-        Pattern pattern = Pattern.compile(emailSpecial);
+    private boolean checkEmail(final String email) {
+        Pattern pattern = Pattern.compile("@yahoo.com");
         Matcher matcher = pattern.matcher(email);
         return matcher.find();
     }

@@ -3,14 +3,17 @@ package health.tracker.api.service;
 import health.tracker.api.domain.OutdoorRunning;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.repository.OutdoorRunningRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class OutdoorRunningService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutdoorRunningService.class);
 
     private final OutdoorRunningRepository outdoorRunningRepository;
     private final UserService userService;
@@ -22,11 +25,10 @@ public class OutdoorRunningService {
 
     public void addOutdoorRunningRecord(final OutdoorRunning outdoorRunning) {
         try{
-            final var user = userService.getByEmail(outdoorRunning.getUserEmail());
+            userService.getByEmail(outdoorRunning.getUserEmail());
             outdoorRunningRepository.save(outdoorRunning);
         }catch (NoUserFoundException e) {
-            throw new NoUserFoundException("You cannot add this outdoor running " +
-                    "record since there is no user with this email.");
+            LOGGER.info("You cannot add this outdoor running record since there is no user with this email.");
         }
     }
 
@@ -35,7 +37,8 @@ public class OutdoorRunningService {
             final var user = userService.getByEmail(email);
             return outdoorRunningRepository.getAllByUserEmail(user.getEmail());
         }catch (NoUserFoundException e){
-            throw new NoUserFoundException(e.getMessage());
+            LOGGER.info("No user found with this email.");
+            return List.of();
         }
     }
 
@@ -43,13 +46,16 @@ public class OutdoorRunningService {
         return outdoorRunningRepository.findAll();
     }
 
-    public OutdoorRunning bestRecordForTheUser(final String email) {
+    public OutdoorRunning bestRecordForTheUser(final String email) throws Exception {
         final var records = getAllOutdoorRunningRecordsOfAnUser(email);
-        records.sort(getComparator());
+        if (records.isEmpty()) {
+            throw new Exception("No records for the user with email " + email);
+        }
+        records.sort(getDistanceComparator());
         return records.get(0);
     }
 
-    private Comparator<OutdoorRunning> getComparator() {
+    private Comparator<OutdoorRunning> getDistanceComparator() {
         return Comparator.comparing(OutdoorRunning::getDistance).reversed();
     }
 }
