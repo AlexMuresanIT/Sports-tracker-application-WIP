@@ -4,6 +4,7 @@ import health.tracker.api.service.OutdoorRunningService;
 import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnProperty(value = "scheduling.enable", havingValue = "true")
 public class RecordsSchedulers {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordsSchedulers.class);
