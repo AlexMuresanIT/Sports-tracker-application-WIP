@@ -1,11 +1,13 @@
-package health.tracker.api.domain;
+package health.tracker.api.domain.DTO;
+
+import health.tracker.api.domain.Gender;
 
 public class UserDTO {
 
     private  String id;
     private  String name;
     private  String email;
-    private  Gender gender;
+    private Gender gender;
     private  Integer age;
     private String password;
 

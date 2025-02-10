@@ -1,6 +1,6 @@
 package health.tracker.api.repository;
 
-import health.tracker.api.domain.OutdoorRunning;
+import health.tracker.api.domain.Entity.OutdoorRunning;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,7 @@ package health.tracker.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import health.tracker.api.TestUtil;
-import health.tracker.api.domain.UserDTO;
+import health.tracker.api.domain.DTO.UserDTO;
 import health.tracker.api.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

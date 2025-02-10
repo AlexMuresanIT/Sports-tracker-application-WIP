@@ -1,13 +1,13 @@
 package health.tracker.api.service;
 
-import health.tracker.api.domain.OutdoorRunning;
+import health.tracker.api.domain.DTO.OutdoorRunningDTO;
+import health.tracker.api.domain.Entity.OutdoorRunning;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.repository.OutdoorRunningRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,6 +30,11 @@ public class OutdoorRunningService {
         }catch (NoUserFoundException e) {
             LOGGER.info("You cannot add this outdoor running record since there is no user with this email.");
         }
+    }
+
+    public OutdoorRunning getSpecificOutdoorRunningRecord(final String id) {
+        final var outdoorRunning = outdoorRunningRepository.findById(id);
+        return outdoorRunning.orElse(null);
     }
 
     public List<OutdoorRunning> getAllOutdoorRunningRecordsOfAnUser(final String email) {

@@ -1,9 +1,9 @@
 package health.tracker.api.service;
 
-import health.tracker.api.domain.UserDTO;
+import health.tracker.api.domain.DTO.UserDTO;
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
-import health.tracker.api.domain.User;
+import health.tracker.api.domain.Entity.User;
 import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.repository.UserRepository;
 import org.springframework.data.domain.Page;
