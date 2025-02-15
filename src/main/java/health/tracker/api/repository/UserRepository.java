@@ -1,6 +1,6 @@
 package health.tracker.api.repository;
 
-import health.tracker.api.domain.User;
+import health.tracker.api.domain.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

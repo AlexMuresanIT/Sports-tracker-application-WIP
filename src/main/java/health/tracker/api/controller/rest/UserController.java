@@ -2,8 +2,7 @@ package health.tracker.api.controller.rest;
 
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
-import health.tracker.api.domain.User;
-import health.tracker.api.domain.UserDTO;
+import health.tracker.api.domain.DTO.UserDTO;
 import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
@@ -15,9 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class UserController {

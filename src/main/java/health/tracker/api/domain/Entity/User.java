@@ -1,5 +1,6 @@
-package health.tracker.api.domain;
+package health.tracker.api.domain.Entity;
 
+import health.tracker.api.domain.Gender;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

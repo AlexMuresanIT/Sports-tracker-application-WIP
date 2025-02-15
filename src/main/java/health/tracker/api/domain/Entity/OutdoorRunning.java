@@ -1,4 +1,4 @@
-package health.tracker.api.domain;
+package health.tracker.api.domain.Entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

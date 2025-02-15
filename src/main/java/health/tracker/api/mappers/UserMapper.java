@@ -1,13 +1,10 @@
 package health.tracker.api.mappers;
 
-import health.tracker.api.domain.User;
-import health.tracker.api.domain.UserDTO;
+import health.tracker.api.domain.Entity.User;
+import health.tracker.api.domain.DTO.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface UserMapper {

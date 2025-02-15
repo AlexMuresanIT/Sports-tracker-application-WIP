@@ -1,9 +1,9 @@
 package health.tracker.api;
 
 import health.tracker.api.domain.Gender;
-import health.tracker.api.domain.OutdoorRunning;
-import health.tracker.api.domain.User;
-import health.tracker.api.domain.UserDTO;
+import health.tracker.api.domain.Entity.OutdoorRunning;
+import health.tracker.api.domain.Entity.User;
+import health.tracker.api.domain.DTO.UserDTO;
 
 public class TestUtil {
     private static final String ID = "12345";
