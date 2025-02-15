@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  app:
+    image: sports-tracker-app:latest
+    build:
+      context: src/main/java
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/HealthTracker
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data/db
+
+volumes:
+  mongo:

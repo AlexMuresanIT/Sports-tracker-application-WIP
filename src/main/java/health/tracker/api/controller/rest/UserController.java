@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -99,11 +101,18 @@ public class UserController {
         return ResponseEntity.ok("User deleted.");
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<UserDTO>> getAllUsers() {
+    @GetMapping("/all/paged")
+    public ResponseEntity<Page<UserDTO>> getAllUsersPaginated() {
         log.info("Getting all users");
         final var users = userService.getAllUsersPaginated();
         return ResponseEntity.ok(userService.convertUserToDTO(users));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        log.info("Getting all users");
+        final var users = userService.getAllUsers();
+        return ResponseEntity.ok(userMapper.toDTO(users));
     }
 
     @GetMapping("/logged")
