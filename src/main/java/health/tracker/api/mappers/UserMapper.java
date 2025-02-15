@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface UserMapper {
 
@@ -21,6 +23,8 @@ public interface UserMapper {
     @Mapping(target = "id", expression = "java(userDTO.getId())")
     @Mapping(target = "password", expression = "java(userDTO.getPassword())")
     User toDomain(final UserDTO userDTO);
+
+    List<UserDTO> toDTO(final List<User> users);
 
     default String getFirstNameFromDTO(final String fullName) {
         final var name = fullName.split(" ");

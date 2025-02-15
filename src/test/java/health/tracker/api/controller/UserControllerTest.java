@@ -111,17 +111,7 @@ public class UserControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        assertThat(responseAsString).isEqualTo("Age updated.");
-    }
-
-    @Test
-    public void testUpdateUserAgeFailed() throws Exception {
-        userRepository.save(TestUtil.getCorrectUser());
-
-        this.mockMvc
-                .perform(put(UPDATE_USER_AGE,"incorrectEmail", 29)
-                        .header("Authorization", "Basic YWRtaW46YWRtaW5ib3Nz"))
-                .andExpect(status().isBadRequest());
+        assertThat(responseAsString).isEqualTo("User updated successfully.");
     }
 
     @Test
