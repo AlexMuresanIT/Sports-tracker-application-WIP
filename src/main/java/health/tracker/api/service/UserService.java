@@ -53,37 +53,35 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void updateUserAge(final String email, final Integer age) {
+    public User updateUserAge(final String email, final Integer age) {
         final var maybeUser = userRepository.findByEmail(email);
-        maybeUser.map(foundUser -> {
+        return maybeUser.map(foundUser -> {
             foundUser.setAge(age);
-            userRepository.save(foundUser);
-            return null;
-        });
+            return userRepository.save(foundUser);
+        })
+                .orElseThrow(() -> new NoUserFoundException("No user found with email " + email));
     }
 
-    public void updateUserPassword(final String email, final String password) {
+    public User updateUserPassword(final String email, final String password) {
         final var maybeUser = userRepository.findByEmail(email);
         if(maybeUser.isPresent()) {
             if(checkPw(password)) {
                 final var user = maybeUser.get();
                 user.setPassword(password);
-                userRepository.save(user);
-                return;
+                return userRepository.save(user);
             }
             throw new InvalidData("Invalid password. Try again");
         }
         throw new NoUserFoundException("No user found with email " + email);
     }
 
-    public void updateUserEmail(final String email, final String newEmail) {
+    public User updateUserEmail(final String email, final String newEmail) {
         final var maybeUser = userRepository.findByEmail(email);
         if(maybeUser.isPresent()) {
             if(checkEmail(newEmail) && !email.equals(newEmail)) {
                 final var user = maybeUser.get();
                 user.setEmail(newEmail);
-                userRepository.save(user);
-                return;
+                return userRepository.save(user);
             }
             throw new InvalidData("Invalid email. Try again");
         }

@@ -4,6 +4,7 @@ import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.domain.DTO.UserDTO;
 import health.tracker.api.mappers.UserMapper;
+import health.tracker.api.producer.UserProducer;
 import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +24,20 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserProducer userProducer;
 
-    public UserController(final UserService userService, final UserMapper userMapper) {
+    public UserController(final UserService userService, final UserMapper userMapper,final UserProducer userProducer) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userProducer = userProducer;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO user) {
         try{
-            userService.addUser(userMapper.toDomain(user));
+            final var userDomain = userMapper.toDomain(user);
+            userService.addUser(userDomain);
+            userProducer.sendNewUserMessage(userDomain);
             return ResponseEntity.ok("User registered successfully.");
         }catch (InvalidData e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -63,14 +68,16 @@ public class UserController {
 
     @PutMapping("/user/updateAge/{email}/{age}")
     public ResponseEntity<String> updateUserAge(@PathVariable String email, @PathVariable Integer age) {
-        userService.updateUserAge(email, age);
+        final var updatedUser = userService.updateUserAge(email, age);
+        userProducer.sendUpdatedUser(updatedUser);
         return ResponseEntity.ok("User updated successfully.");
     }
 
     @PutMapping("/user/updatePassword/{email}/{password}")
     public ResponseEntity<String> updateUserPassword(@PathVariable String email, @PathVariable String password) {
         try{
-            userService.updateUserPassword(email, password);
+            final var updatedUser = userService.updateUserPassword(email, password);
+            userProducer.sendUpdatedUser(updatedUser);
             return new ResponseEntity<>("Password updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -80,7 +87,8 @@ public class UserController {
     @PutMapping("/user/updateEmail/{email}/{newEmail}")
     public ResponseEntity<String> updateUserEmail(@PathVariable String email, @PathVariable String newEmail) {
         try{
-            userService.updateUserEmail(email, newEmail);
+            final var updatedUser = userService.updateUserEmail(email, newEmail);
+            userProducer.sendUpdatedUser(updatedUser);
             return new ResponseEntity<>("Email updated.", HttpStatus.OK);
         }catch (NoUserFoundException | InvalidData e) {
             return ResponseEntity.badRequest().body(e.getMessage());
