@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static health.tracker.api.config.kafka.KafkaTopic.REGISTER_USER;
-import static health.tracker.api.config.kafka.KafkaTopic.UPDATE_USER;
+import static health.tracker.api.config.kafka.KafkaTopicConfiguration.REGISTER_USER;
+import static health.tracker.api.config.kafka.KafkaTopicConfiguration.UPDATE_USER;
 
 @Service
 public class UserProducer {
     private static final Logger logger = LoggerFactory.getLogger(UserProducer.class);
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public UserProducer(KafkaTemplate<String, String> kafkaTemplate) {
+    public UserProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -27,7 +27,7 @@ public class UserProducer {
             kafkaTemplate.send(
                     REGISTER_USER,
                     UUID.randomUUID().toString(),
-                    concatenateName(user));
+                    user);
         } catch (Exception e){
             logger.error("Error while sending new user message", e);
         }
@@ -39,13 +39,9 @@ public class UserProducer {
             kafkaTemplate.send(
                     UPDATE_USER,
                     UUID.randomUUID().toString(),
-                    concatenateName(user));
+                    user);
         } catch (Exception e) {
             logger.error("Error while sending updated user message", e);
         }
-    }
-
-    private String concatenateName(final User user) {
-        return user.getFirstName() + " " + user.getLastName();
     }
 }

@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka-streams'
+	implementation("com.fasterxml.jackson.core:jackson-databind")
 
 
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"

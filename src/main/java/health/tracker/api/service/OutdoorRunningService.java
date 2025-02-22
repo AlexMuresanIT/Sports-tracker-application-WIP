@@ -28,7 +28,7 @@ public class OutdoorRunningService {
             userService.getByEmail(outdoorRunning.getUserEmail());
             outdoorRunningRepository.save(outdoorRunning);
         }catch (NoUserFoundException e) {
-            LOGGER.info("You cannot add this outdoor running record since there is no user with this email.");
+            LOGGER.info("You cannot add this outdoor running record since there is no user with the email " + outdoorRunning.getUserEmail());
         }
     }
 
