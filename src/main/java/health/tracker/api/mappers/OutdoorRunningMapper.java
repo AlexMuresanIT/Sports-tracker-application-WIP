@@ -16,5 +16,11 @@ public interface OutdoorRunningMapper {
 
     List<OutdoorRunningDTO> toDTOs(List<OutdoorRunning> outdoorRunnings);
 
+    @Mapping(target = "userEmail", source = "email")
+    @Mapping(target = "distance", source = "distance")
+    @Mapping(target = "time", source = "time")
+    @Mapping(target = "burnedCalories", source = "burnedCalories")
+    @Mapping(target = "averageSpeed", source = "averageSpeed")
+    @Mapping(target = "status", source = "status")
     OutdoorRunning toEntity(OutdoorRunningDTO outdoorRunningDTO);
 }

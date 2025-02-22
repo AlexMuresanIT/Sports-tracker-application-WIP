@@ -1,5 +1,6 @@
 package health.tracker.api.domain.Entity;
 
+import health.tracker.api.domain.Status;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -25,13 +26,17 @@ public class OutdoorRunning {
     @Field("Average speed")
     private Double averageSpeed;
 
-    public OutdoorRunning(String id, String userEmail, Double distance, String time, Integer burnedCalories, Double averageSpeed) {
+    @Field("Record status")
+    private Status status;
+
+    public OutdoorRunning(String id, String userEmail, Double distance, String time, Integer burnedCalories, Double averageSpeed, Status status) {
         this.id = id;
         this.userEmail = userEmail;
         this.distance = distance;
         this.time = time;
         this.burnedCalories = burnedCalories;
         this.averageSpeed = averageSpeed;
+        this.status = status;
     }
 
     public String getId() {

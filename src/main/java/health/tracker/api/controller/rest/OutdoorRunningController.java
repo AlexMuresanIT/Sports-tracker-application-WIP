@@ -3,6 +3,7 @@ package health.tracker.api.controller.rest;
 import health.tracker.api.domain.DTO.OutdoorRunningDTO;
 import health.tracker.api.domain.Entity.OutdoorRunning;
 import health.tracker.api.mappers.OutdoorRunningMapper;
+import health.tracker.api.producer.OutdoorRunningProducer;
 import health.tracker.api.service.OutdoorRunningService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +15,22 @@ public class OutdoorRunningController {
 
     private final OutdoorRunningService outdoorRunningService;
     private final OutdoorRunningMapper outdoorRunningMapper;
+    private final OutdoorRunningProducer outdoorRunningProducer;
 
-    public OutdoorRunningController(final OutdoorRunningService outdoorRunningService, final OutdoorRunningMapper outdoorRunningMapper) {
+    public OutdoorRunningController(
+            final OutdoorRunningService outdoorRunningService,
+            final OutdoorRunningMapper outdoorRunningMapper,
+            final OutdoorRunningProducer outdoorRunningProducer) {
         this.outdoorRunningService = outdoorRunningService;
         this.outdoorRunningMapper = outdoorRunningMapper;
+        this.outdoorRunningProducer = outdoorRunningProducer;
     }
 
     @PostMapping("/addRecord")
     public ResponseEntity<String> addOutdoorRunningRecord(@RequestBody final OutdoorRunningDTO outdoorRunning) {
-        outdoorRunningService.addOutdoorRunningRecord(outdoorRunningMapper.toEntity(outdoorRunning));
+        final var newRecord = outdoorRunningMapper.toEntity(outdoorRunning);
+        outdoorRunningService.addOutdoorRunningRecord(newRecord);
+        outdoorRunningProducer.sendNewOutdoorRunningRecord(newRecord);
         return ResponseEntity.ok("Successfully added outdoor running record");
     }
 
