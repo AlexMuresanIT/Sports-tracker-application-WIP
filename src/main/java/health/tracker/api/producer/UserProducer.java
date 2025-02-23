@@ -22,6 +22,10 @@ public class UserProducer {
     }
 
     public void sendNewUserMessage(final User user) {
+        if (user == null) {
+            logger.warn("User is null");
+            return;
+        }
         try{
             logger.info("New user with name {} and email {} registered", user.getFirstName(), user.getEmail());
             kafkaTemplate.send(
@@ -34,6 +38,10 @@ public class UserProducer {
     }
 
     public void sendUpdatedUser(final User user) {
+        if (user == null) {
+            logger.warn("User is null");
+            return;
+        }
         try {
             logger.info("Send user updated with name {} and email {}", user.getFirstName(), user.getEmail());
             kafkaTemplate.send(

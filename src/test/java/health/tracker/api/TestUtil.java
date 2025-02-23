@@ -4,6 +4,9 @@ import health.tracker.api.domain.Gender;
 import health.tracker.api.domain.Entity.OutdoorRunning;
 import health.tracker.api.domain.Entity.User;
 import health.tracker.api.domain.DTO.UserDTO;
+import health.tracker.api.domain.Status;
+
+import static health.tracker.api.domain.Status.SUCCESS;
 
 public class TestUtil {
     private static final String ID = "12345";
@@ -64,6 +67,6 @@ public class TestUtil {
     }
 
     public static OutdoorRunning getOutdoorRunningRecord(final Double distance, final Integer burnedCalories) {
-        return new OutdoorRunning(ID, MAIL, distance, "12.23.12", burnedCalories, 6.5);
+        return new OutdoorRunning(ID, MAIL, distance, "12.23.12", burnedCalories, 6.5, SUCCESS);
     }
 }
