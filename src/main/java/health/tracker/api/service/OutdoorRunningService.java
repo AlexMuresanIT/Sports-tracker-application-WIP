@@ -23,13 +23,14 @@ public class OutdoorRunningService {
         this.userService = userService;
     }
 
-    public void addOutdoorRunningRecord(final OutdoorRunning outdoorRunning) {
+    public OutdoorRunning addOutdoorRunningRecord(final OutdoorRunning outdoorRunning) {
         try{
             userService.getByEmail(outdoorRunning.getUserEmail());
-            outdoorRunningRepository.save(outdoorRunning);
+            return outdoorRunningRepository.save(outdoorRunning);
         }catch (NoUserFoundException e) {
             LOGGER.info("You cannot add this outdoor running record since there is no user with the email " + outdoorRunning.getUserEmail());
         }
+        return null;
     }
 
     public OutdoorRunning getSpecificOutdoorRunningRecord(final String id) {

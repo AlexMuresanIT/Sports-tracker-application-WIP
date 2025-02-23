@@ -28,9 +28,8 @@ public class OutdoorRunningController {
 
     @PostMapping("/addRecord")
     public ResponseEntity<String> addOutdoorRunningRecord(@RequestBody final OutdoorRunningDTO outdoorRunning) {
-        final var newRecord = outdoorRunningMapper.toEntity(outdoorRunning);
-        outdoorRunningService.addOutdoorRunningRecord(newRecord);
-        outdoorRunningProducer.sendNewOutdoorRunningRecord(newRecord);
+        final var savedRecord = outdoorRunningService.addOutdoorRunningRecord(outdoorRunningMapper.toEntity(outdoorRunning));
+        outdoorRunningProducer.sendNewOutdoorRunningRecord(savedRecord);
         return ResponseEntity.ok("Successfully added outdoor running record");
     }
 
