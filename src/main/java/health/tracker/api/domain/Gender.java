@@ -1,13 +1,12 @@
 package health.tracker.api.domain;
 
 public enum Gender {
+  MALE("male"),
+  FEMALE("female");
 
-    MALE("male"),
-    FEMALE("female");
+  private final String name;
 
-    private final String name;
-
-    Gender(String name) {
-        this.name = name;
-    }
+  Gender(String name) {
+    this.name = name;
+  }
 }
