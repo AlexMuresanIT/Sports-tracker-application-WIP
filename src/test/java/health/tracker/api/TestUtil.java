@@ -9,8 +9,8 @@ import health.tracker.api.domain.Status;
 import static health.tracker.api.domain.Status.SUCCESS;
 
 public class TestUtil {
-    private static final String ID = "12345";
-    private static final String MAIL = "email@yahoo.com";
+    public static final String ID = "12345";
+    public static final String MAIL = "email@yahoo.com";
 
     public static User getUser() {
         return new User(
