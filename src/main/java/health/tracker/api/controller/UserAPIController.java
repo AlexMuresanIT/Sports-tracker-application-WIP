@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class UserAPIController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserAPIController.class);
+  private static final Logger log = LoggerFactory.getLogger(UserAPIController.class);
 
-    @Value("${app.title}")
-    private String appName;
+  @Value("${app.title}")
+  private String appName;
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserAPIController(UserService userService) {
-        this.userService = userService;
-    }
+  public UserAPIController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Secured({"ROLE_ADMIN"})
-    @RequestMapping("/")
-    public String showUsers(Model model) {
-        log.info("Showing users");
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("appName", appName);
-        return "users";
-    }
+  @Secured({"ROLE_ADMIN"})
+  @RequestMapping("/")
+  public String showUsers(Model model) {
+    log.info("Showing users");
+    model.addAttribute("users", userService.getAllUsers());
+    model.addAttribute("appName", appName);
+    return "users";
+  }
 }
