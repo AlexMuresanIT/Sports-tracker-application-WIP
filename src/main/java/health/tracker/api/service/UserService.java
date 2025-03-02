@@ -1,6 +1,7 @@
 package health.tracker.api.service;
 
 import health.tracker.api.domain.DTO.UserDTO;
+import health.tracker.api.domain.Entity.Award;
 import health.tracker.api.domain.Entity.User;
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
@@ -100,6 +101,18 @@ public class UserService {
 
   public Page<UserDTO> convertUserToDTO(final Page<User> users) {
     return users.map(userMapper::toDTO);
+  }
+
+  public List<User> updateUsersAwardsList(final List<User> users, final List<Award> allAwards) {
+    return users.stream().map(user -> updateUserAwardList(allAwards, user)).toList();
+  }
+
+  public List<User> saveUsers(final List<User> users) {
+    return userRepository.saveAll(users);
+  }
+
+  private User updateUserAwardList(List<Award> allAwards, User user) {
+    return User.builder(user).awards(allAwards).build();
   }
 
   private boolean checkPw(final String password) {

@@ -1,10 +1,13 @@
 package health.tracker.api.domain.Entity;
 
 import health.tracker.api.domain.Gender;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.integration.annotation.Default;
 
 @Document("users")
 public class User {
@@ -30,14 +33,20 @@ public class User {
   @Field("Age")
   private Integer age;
 
+  @Field("Awards")
+  private List<Award> awards;
+
+  public User() {}
+
+  @Default
   public User(
-      String id,
-      String firstName,
-      String email,
-      String lastName,
-      String password,
-      Gender gender,
-      Integer age) {
+      final String id,
+      final String firstName,
+      final String email,
+      final String lastName,
+      final String password,
+      final Gender gender,
+      final Integer age) {
     this.id = id;
     this.firstName = firstName;
     this.email = email;
@@ -45,6 +54,90 @@ public class User {
     this.password = password;
     this.gender = gender;
     this.age = age;
+    this.awards = new ArrayList<>();
+  }
+
+  public User(
+      final String id,
+      final String firstName,
+      final String lastName,
+      final String email,
+      final String password,
+      final Gender gender,
+      final Integer age,
+      final List<Award> awards) {
+    this(id, firstName, lastName, email, password, gender, age);
+    this.awards = awards;
+  }
+
+  public static class Builder {
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private Gender gender;
+    private Integer age;
+    private List<Award> awards;
+
+    public Builder(final User user) {
+      this.id = user.getId();
+      this.firstName = user.getFirstName();
+      this.lastName = user.getLastName();
+      this.email = user.getEmail();
+      this.password = user.getPassword();
+      this.gender = user.getGender();
+      this.age = user.getAge();
+      this.awards = user.getAwards();
+    }
+
+    public Builder id(final String id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder firstName(final String firstName) {
+      this.firstName = firstName;
+      return this;
+    }
+
+    public Builder lastName(final String lastName) {
+      this.lastName = lastName;
+      return this;
+    }
+
+    public Builder email(final String email) {
+      this.email = email;
+      return this;
+    }
+
+    public Builder password(final String password) {
+      this.password = password;
+      return this;
+    }
+
+    public Builder gender(final Gender gender) {
+      this.gender = gender;
+      return this;
+    }
+
+    public Builder age(final Integer age) {
+      this.age = age;
+      return this;
+    }
+
+    public Builder awards(final List<Award> awards) {
+      this.awards = awards;
+      return this;
+    }
+
+    public User build() {
+      return new User(id, firstName, lastName, email, password, gender, age, awards);
+    }
+  }
+
+  public static Builder builder(final User user) {
+    return new Builder(user);
   }
 
   public String getId() {
@@ -101,5 +194,13 @@ public class User {
 
   public void setGender(Gender gender) {
     this.gender = gender;
+  }
+
+  public List<Award> getAwards() {
+    return awards;
+  }
+
+  public void setAwards(List<Award> awards) {
+    this.awards = awards;
   }
 }
