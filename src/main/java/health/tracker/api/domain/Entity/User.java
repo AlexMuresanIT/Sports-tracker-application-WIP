@@ -36,6 +36,9 @@ public class User {
   @Field("Awards")
   private List<Award> awards;
 
+  @Field("Phone number")
+  private String phoneNumber;
+
   public User() {}
 
   @Default
@@ -46,7 +49,8 @@ public class User {
       final String lastName,
       final String password,
       final Gender gender,
-      final Integer age) {
+      final Integer age,
+      final String phoneNumber) {
     this.id = id;
     this.firstName = firstName;
     this.email = email;
@@ -55,6 +59,7 @@ public class User {
     this.gender = gender;
     this.age = age;
     this.awards = new ArrayList<>();
+    this.phoneNumber = phoneNumber;
   }
 
   public User(
@@ -65,9 +70,11 @@ public class User {
       final String password,
       final Gender gender,
       final Integer age,
-      final List<Award> awards) {
-    this(id, firstName, lastName, email, password, gender, age);
+      final List<Award> awards,
+      final String phoneNumber) {
+    this(id, firstName, lastName, email, password, gender, age, phoneNumber);
     this.awards = awards;
+    this.phoneNumber = phoneNumber;
   }
 
   public static class Builder {
@@ -79,6 +86,7 @@ public class User {
     private Gender gender;
     private Integer age;
     private List<Award> awards;
+    private String phoneNumber;
 
     public Builder(final User user) {
       this.id = user.getId();
@@ -89,6 +97,7 @@ public class User {
       this.gender = user.getGender();
       this.age = user.getAge();
       this.awards = user.getAwards();
+      this.phoneNumber = user.getPhoneNumber();
     }
 
     public Builder id(final String id) {
@@ -131,8 +140,13 @@ public class User {
       return this;
     }
 
+    public Builder phoneNumber(final String phoneNumber) {
+      this.phoneNumber = phoneNumber;
+      return this;
+    }
+
     public User build() {
-      return new User(id, firstName, lastName, email, password, gender, age, awards);
+      return new User(id, firstName, lastName, email, password, gender, age, awards, phoneNumber);
     }
   }
 
@@ -202,5 +216,13 @@ public class User {
 
   public void setAwards(List<Award> awards) {
     this.awards = awards;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 }

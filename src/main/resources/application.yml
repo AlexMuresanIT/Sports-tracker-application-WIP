@@ -8,3 +8,7 @@ login:
 
 scheduling:
   enable: true
+
+whatsapp:
+  api: "https://api.callmebot.com/whatsapp.php"
+  api-key: "6763790"

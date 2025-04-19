@@ -111,7 +111,7 @@ public class UserService {
     return userRepository.saveAll(users);
   }
 
-  private User updateUserAwardList(List<Award> allAwards, User user) {
+  private User updateUserAwardList(final List<Award> allAwards, final User user) {
     return User.builder(user).awards(allAwards).build();
   }
 
@@ -120,20 +120,20 @@ public class UserService {
       return false;
     }
 
-    Pattern pattern1 = Pattern.compile("[!@#$%^&?]");
-    Pattern pattern2 = Pattern.compile("[A-Z]");
-    Pattern pattern3 = Pattern.compile("[0-9]");
+    final Pattern pattern1 = Pattern.compile("[!@#$%^&?]");
+    final Pattern pattern2 = Pattern.compile("[A-Z]");
+    final Pattern pattern3 = Pattern.compile("[0-9]");
 
-    Matcher matcher = pattern1.matcher(password);
-    Matcher matcher1 = pattern2.matcher(password);
-    Matcher matcher2 = pattern3.matcher(password);
+    final Matcher matcher = pattern1.matcher(password);
+    final Matcher matcher1 = pattern2.matcher(password);
+    final Matcher matcher2 = pattern3.matcher(password);
 
     return matcher.find() && matcher1.find() && matcher2.find();
   }
 
   private boolean checkEmail(final String email) {
-    Pattern pattern = Pattern.compile("@yahoo.com");
-    Matcher matcher = pattern.matcher(email);
+    final Pattern pattern = Pattern.compile("@yahoo.com");
+    final Matcher matcher = pattern.matcher(email);
     return matcher.find();
   }
 }

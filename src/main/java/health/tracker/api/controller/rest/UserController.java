@@ -6,6 +6,7 @@ import health.tracker.api.exception.NoUserFoundException;
 import health.tracker.api.mappers.UserMapper;
 import health.tracker.api.producer.UserProducer;
 import health.tracker.api.service.UserService;
+import health.tracker.api.service.WhatsappApiService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,54 +22,64 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+  private static final String WELCOME_MESSAGE =
+      "Hello %s ! Welcome to the Sports Tracker application";
+
   private final UserService userService;
   private final UserMapper userMapper;
   private final UserProducer userProducer;
+  private final WhatsappApiService whatsappApiService;
 
   public UserController(
-      final UserService userService, final UserMapper userMapper, final UserProducer userProducer) {
+      final UserService userService,
+      final UserMapper userMapper,
+      final UserProducer userProducer,
+      final WhatsappApiService whatsappApiService) {
     this.userService = userService;
     this.userMapper = userMapper;
     this.userProducer = userProducer;
+    this.whatsappApiService = whatsappApiService;
   }
 
   @PostMapping("/register")
-  public ResponseEntity<String> register(@RequestBody UserDTO user) {
+  public ResponseEntity<String> register(@RequestBody final UserDTO user) {
     try {
       final var userDomain = userMapper.toDomain(user);
       userService.addUser(userDomain);
       userProducer.sendNewUserMessage(userDomain);
+      whatsappApiService.sendWhatsappMessage(
+          userDomain.getPhoneNumber(), WELCOME_MESSAGE.formatted(userDomain.getFirstName()));
       return ResponseEntity.ok("User registered successfully.");
-    } catch (InvalidData e) {
+    } catch (final InvalidData e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @GetMapping("/user/id/{id}")
-  public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
+  public ResponseEntity<UserDTO> getUserById(@PathVariable final String id) {
     log.info("Getting user by id: {}", id);
     try {
       final var user = userService.getById(id);
       return ResponseEntity.ok(userMapper.toDTO(user));
-    } catch (NoUserFoundException e) {
+    } catch (final NoUserFoundException e) {
       return ResponseEntity.badRequest().build();
     }
   }
 
   @GetMapping(value = "/user/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+  public ResponseEntity<UserDTO> getUserByEmail(@PathVariable final String email) {
     log.info("Getting user by email: {}", email);
     try {
       final var user = userService.getByEmail(email);
       return ResponseEntity.ok(userMapper.toDTO(user));
-    } catch (NoUserFoundException e) {
+    } catch (final NoUserFoundException e) {
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PutMapping("/user/updateAge/{email}/{age}")
   public ResponseEntity<String> updateUserAge(
-      @PathVariable String email, @PathVariable Integer age) {
+      @PathVariable final String email, @PathVariable final Integer age) {
     final var updatedUser = userService.updateUserAge(email, age);
     userProducer.sendUpdatedUser(updatedUser);
     return ResponseEntity.ok("User updated successfully.");
@@ -76,37 +87,37 @@ public class UserController {
 
   @PutMapping("/user/updatePassword/{email}/{password}")
   public ResponseEntity<String> updateUserPassword(
-      @PathVariable String email, @PathVariable String password) {
+      @PathVariable final String email, @PathVariable final String password) {
     try {
       final var updatedUser = userService.updateUserPassword(email, password);
       userProducer.sendUpdatedUser(updatedUser);
       return new ResponseEntity<>("Password updated.", HttpStatus.OK);
-    } catch (NoUserFoundException | InvalidData e) {
+    } catch (final NoUserFoundException | InvalidData e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @PutMapping("/user/updateEmail/{email}/{newEmail}")
   public ResponseEntity<String> updateUserEmail(
-      @PathVariable String email, @PathVariable String newEmail) {
+      @PathVariable final String email, @PathVariable final String newEmail) {
     try {
       final var updatedUser = userService.updateUserEmail(email, newEmail);
       userProducer.sendUpdatedUser(updatedUser);
       return new ResponseEntity<>("Email updated.", HttpStatus.OK);
-    } catch (NoUserFoundException | InvalidData e) {
+    } catch (final NoUserFoundException | InvalidData e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @DeleteMapping("/user/delete/{id}")
-  public ResponseEntity<String> deleteUserById(@PathVariable String id) {
+  public ResponseEntity<String> deleteUserById(@PathVariable final String id) {
     log.info("Deleting user by id: {}", id);
     userService.deleteUserById(id);
     return ResponseEntity.ok("User deleted.");
   }
 
   @DeleteMapping("/user/deleteE/{email}")
-  public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {
+  public ResponseEntity<String> deleteUserByEmail(@PathVariable final String email) {
     log.info("Deleting user by email: {}", email);
     userService.deleteUserByEmail(email);
     return ResponseEntity.ok("User deleted.");
@@ -127,7 +138,7 @@ public class UserController {
   }
 
   @GetMapping("/logged")
-  public ResponseEntity<String> currentUser(@AuthenticationPrincipal UserDetails user) {
+  public ResponseEntity<String> currentUser(@AuthenticationPrincipal final UserDetails user) {
     return ResponseEntity.ok("Current user " + user.getUsername());
   }
 }
