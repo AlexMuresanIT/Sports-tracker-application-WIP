@@ -10,6 +10,7 @@ public class UserDTO {
   private Gender gender;
   private Integer age;
   private String password;
+  private String phoneNumber;
 
   public UserDTO(
       final String id,
@@ -17,13 +18,23 @@ public class UserDTO {
       final String email,
       final Gender gender,
       final Integer age,
-      final String password) {
+      final String password,
+      final String phoneNumber) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.gender = gender;
     this.age = age;
     this.password = password;
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
   public String getId() {

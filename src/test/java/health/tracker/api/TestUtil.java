@@ -10,25 +10,28 @@ import health.tracker.api.domain.Gender;
 public class TestUtil {
   public static final String ID = "12345";
   public static final String MAIL = "email@yahoo.com";
+  public static final String PHONE_NUMBER = "077734343";
 
   public static User getUser() {
-    return new User("id", "name", MAIL, "lastName", "adada", Gender.MALE, 20);
+    return new User("id", "name", MAIL, "lastName", "adada", Gender.MALE, 20, PHONE_NUMBER);
   }
 
   public static User userWithWrongPw() {
-    return new User("id", "name", MAIL, "lastName", "adadada", Gender.MALE, 24);
+    return new User("id", "name", MAIL, "lastName", "adadada", Gender.MALE, 24, PHONE_NUMBER);
   }
 
   public static User getCorrectUser() {
-    return new User("id", "firstName", MAIL, "lastName", "lastName007!", Gender.MALE, 24);
+    return new User(
+        "id", "firstName", MAIL, "lastName", "lastName007!", Gender.MALE, 24, PHONE_NUMBER);
   }
 
   public static UserDTO getUserDTO() {
-    return new UserDTO("id", "firstName", MAIL + "da", Gender.MALE, 24, "asdadaA4!");
+    return new UserDTO("id", "firstName", MAIL + "da", Gender.MALE, 24, "asdadaA4!", PHONE_NUMBER);
   }
 
   public static User getUser2() {
-    return new User("id", "firstName", MAIL, "lastName", "lastName007!", Gender.FEMALE, 27);
+    return new User(
+        "id", "firstName", MAIL, "lastName", "lastName007!", Gender.FEMALE, 27, PHONE_NUMBER);
   }
 
   public static OutdoorRunning getOutdoorRunningRecord(

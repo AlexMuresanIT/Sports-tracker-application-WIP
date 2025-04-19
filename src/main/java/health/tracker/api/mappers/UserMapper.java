@@ -14,6 +14,7 @@ public interface UserMapper {
   @Mapping(target = "email", expression = "java(user.getEmail())")
   @Mapping(target = "name", expression = "java(user.getFirstName() + ' ' + user.getLastName())")
   @Mapping(target = "password", expression = "java(user.getPassword())")
+  @Mapping(target = "phoneNumber", expression = "java(user.getPhoneNumber())")
   UserDTO toDTO(final User user);
 
   @Mapping(target = "firstName", expression = "java(getFirstNameFromDTO(userDTO.getName()))")
@@ -21,6 +22,7 @@ public interface UserMapper {
   @Mapping(target = "email", expression = "java(userDTO.getEmail())")
   @Mapping(target = "id", expression = "java(userDTO.getId())")
   @Mapping(target = "password", expression = "java(userDTO.getPassword())")
+  @Mapping(target = "phoneNumber", expression = "java(userDTO.getPhoneNumber())")
   User toDomain(final UserDTO userDTO);
 
   List<UserDTO> toDTO(final List<User> users);
