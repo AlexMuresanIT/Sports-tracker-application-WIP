@@ -2,13 +2,12 @@ package health.tracker.api.service.initializer;
 
 import health.tracker.api.domain.AwardType;
 import health.tracker.api.domain.Entity.Award;
+import health.tracker.api.service.AwardService;
+import health.tracker.api.service.UserService;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-
-import health.tracker.api.service.AwardService;
-import health.tracker.api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -110,10 +109,10 @@ public class AwardInitializer implements CommandLineRunner {
       log.info("Application started and saving awards.");
       final var awards = awardService.findAllAwards();
       if (awards.isEmpty()) {
-          awardService.saveAwards(ALL_AWARDS);
-          final var allUsers = userService.getAllUsers();
-          final var updatedUsers = userService.updateUsersAwardsList(allUsers, ALL_AWARDS);
-          userService.saveUsers(updatedUsers);
+        awardService.saveAwards(ALL_AWARDS);
+        final var allUsers = userService.getAllUsers();
+        final var updatedUsers = userService.updateUsersAwardsList(allUsers, ALL_AWARDS);
+        userService.saveUsers(updatedUsers);
       }
     } catch (final Exception e) {
       log.error("There was an error saving award {}", e.getMessage());
