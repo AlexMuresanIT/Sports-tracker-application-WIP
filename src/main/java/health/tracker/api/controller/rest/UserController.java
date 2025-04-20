@@ -1,5 +1,7 @@
 package health.tracker.api.controller.rest;
 
+import static health.tracker.api.service.utils.MessageUtil.*;
+
 import health.tracker.api.domain.DTO.UserDTO;
 import health.tracker.api.exception.InvalidData;
 import health.tracker.api.exception.NoUserFoundException;
@@ -21,9 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
-  private static final String WELCOME_MESSAGE =
-      "Hello %s ! Welcome to the Sports Tracker application";
 
   private final UserService userService;
   private final UserMapper userMapper;
@@ -82,6 +81,9 @@ public class UserController {
       @PathVariable final String email, @PathVariable final Integer age) {
     final var updatedUser = userService.updateUserAge(email, age);
     userProducer.sendUpdatedUser(updatedUser);
+    whatsappApiService.sendWhatsappMessage(
+        updatedUser.getPhoneNumber(),
+        UPDATE_AGE_MESSAGE.formatted(updatedUser.getFirstName(), updatedUser.getAge()));
     return ResponseEntity.ok("User updated successfully.");
   }
 
@@ -91,6 +93,7 @@ public class UserController {
     try {
       final var updatedUser = userService.updateUserPassword(email, password);
       userProducer.sendUpdatedUser(updatedUser);
+      whatsappApiService.sendWhatsappMessage(updatedUser.getPhoneNumber(), UPDATE_PASSWORD_MESSAGE);
       return new ResponseEntity<>("Password updated.", HttpStatus.OK);
     } catch (final NoUserFoundException | InvalidData e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -103,6 +106,7 @@ public class UserController {
     try {
       final var updatedUser = userService.updateUserEmail(email, newEmail);
       userProducer.sendUpdatedUser(updatedUser);
+      whatsappApiService.sendWhatsappMessage(updatedUser.getPhoneNumber(), UPDATE_EMAIL_MESSAGE);
       return new ResponseEntity<>("Email updated.", HttpStatus.OK);
     } catch (final NoUserFoundException | InvalidData e) {
       return ResponseEntity.badRequest().body(e.getMessage());

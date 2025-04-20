@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class AwardService {
   private final AwardRepository awardRepository;
 
-  public AwardService(AwardRepository awardRepository) {
+  public AwardService(final AwardRepository awardRepository) {
     this.awardRepository = awardRepository;
   }
 
@@ -17,7 +17,7 @@ public class AwardService {
     return awardRepository.save(award);
   }
 
-  public void saveAwards(List<Award> awards) {
+  public void saveAwards(final List<Award> awards) {
     awardRepository.saveAll(awards);
   }
 
