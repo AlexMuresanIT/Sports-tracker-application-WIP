@@ -15,46 +15,43 @@ import reactor.core.publisher.Mono;
 @SpringBootTest
 public class WhatsappApiServiceTest {
 
-    private WhatsappApiService whatsappApiService;
+  private WhatsappApiService whatsappApiService;
 
-    @Mock
-    private WebClient.Builder webClientBuilder;
+  @Mock private WebClient.Builder webClientBuilder;
 
-    @Mock
-    private WebClient webClient;
+  @Mock private WebClient webClient;
 
-    @Mock
-    private WebClient.RequestBodyUriSpec requestBodyUriSpec;
+  @Mock private WebClient.RequestBodyUriSpec requestBodyUriSpec;
 
-    @Mock
-    private WebClient.ResponseSpec responseSpec;
+  @Mock private WebClient.ResponseSpec responseSpec;
 
-    @BeforeEach
-    void setUp() {
-        when(webClientBuilder.build()).thenReturn(webClient);
-        whatsappApiService = new WhatsappApiService(webClientBuilder);
+  @BeforeEach
+  void setUp() {
+    when(webClientBuilder.build()).thenReturn(webClient);
+    whatsappApiService = new WhatsappApiService(webClientBuilder);
 
-        // Set the required properties
-        ReflectionTestUtils.setField(whatsappApiService, "WHATSAPP_URL", "https://api.example.com/whatsapp");
-        ReflectionTestUtils.setField(whatsappApiService, "API_KEY", "test-api-key");
+    // Set the required properties
+    ReflectionTestUtils.setField(
+        whatsappApiService, "WHATSAPP_URL", "https://api.example.com/whatsapp");
+    ReflectionTestUtils.setField(whatsappApiService, "API_KEY", "test-api-key");
 
-        // Mock the WebClient chain
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("success"));
-    }
+    // Mock the WebClient chain
+    when(webClient.post()).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("success"));
+  }
 
-    @Test
-    void shouldSendWhatsappMessage() {
-        // Given
-        String phoneNumber = "1234567890";
-        String message = "Test message";
+  @Test
+  void shouldSendWhatsappMessage() {
+    // Given
+    String phoneNumber = "1234567890";
+    String message = "Test message";
 
-        // When
-        whatsappApiService.sendWhatsappMessage(phoneNumber, message);
+    // When
+    whatsappApiService.sendWhatsappMessage(phoneNumber, message);
 
-        // Then
-        verify(webClient, times(1)).post();
-    }
+    // Then
+    verify(webClient, times(1)).post();
+  }
 }
