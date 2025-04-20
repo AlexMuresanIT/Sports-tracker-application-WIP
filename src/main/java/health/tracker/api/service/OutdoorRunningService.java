@@ -43,7 +43,7 @@ public class OutdoorRunningService {
     try {
       final var user = userService.getByEmail(email);
       return outdoorRunningRepository.getAllByUserEmail(user.getEmail());
-    } catch (NoUserFoundException e) {
+    } catch (final NoUserFoundException e) {
       LOGGER.info("No user found with this email.");
       return List.of();
     }

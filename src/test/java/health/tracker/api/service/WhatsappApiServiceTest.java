@@ -30,7 +30,6 @@ public class WhatsappApiServiceTest {
     when(webClientBuilder.build()).thenReturn(webClient);
     whatsappApiService = new WhatsappApiService(webClientBuilder);
 
-    // Set the required properties
     ReflectionTestUtils.setField(
         whatsappApiService, "WHATSAPP_URL", "https://api.example.com/whatsapp");
     ReflectionTestUtils.setField(whatsappApiService, "API_KEY", "test-api-key");
@@ -44,14 +43,11 @@ public class WhatsappApiServiceTest {
 
   @Test
   void shouldSendWhatsappMessage() {
-    // Given
-    String phoneNumber = "1234567890";
-    String message = "Test message";
+    final var phoneNumber = "1234567890";
+    final var message = "Test message";
 
-    // When
     whatsappApiService.sendWhatsappMessage(phoneNumber, message);
 
-    // Then
     verify(webClient, times(1)).post();
   }
 }

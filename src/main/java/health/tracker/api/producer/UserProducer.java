@@ -16,7 +16,7 @@ public class UserProducer {
 
   private final KafkaTemplate<String, Object> kafkaTemplate;
 
-  public UserProducer(KafkaTemplate<String, Object> kafkaTemplate) {
+  public UserProducer(final KafkaTemplate<String, Object> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 
