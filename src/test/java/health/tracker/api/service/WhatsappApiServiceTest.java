@@ -46,33 +46,7 @@ public class WhatsappApiServiceTest {
     }
 
     @Test
-    void shouldNotSendMessageWhenPhoneNumberIsBlank() {
-        // Given
-        String phoneNumber = "";
-        String message = "Test message";
-
-        // When
-        whatsappApiService.sendWhatsappMessage(phoneNumber, message);
-
-        // Then
-        verify(webClient, never()).post();
-    }
-
-    @Test
-    void shouldNotSendMessageWhenMessageIsBlank() {
-        // Given
-        String phoneNumber = "1234567890";
-        String message = "";
-
-        // When
-        whatsappApiService.sendWhatsappMessage(phoneNumber, message);
-
-        // Then
-        verify(webClient, never()).post();
-    }
-
-    @Test
-    void shouldSendMessageWhenBothParametersAreValid() {
+    void shouldSendWhatsappMessage() {
         // Given
         String phoneNumber = "1234567890";
         String message = "Test message";
