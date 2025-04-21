@@ -104,7 +104,7 @@ public class AwardInitializer implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) {
+  public void run(final String... args) {
     try {
       log.info("Application started and saving awards.");
       final var awards = awardService.findAllAwards();

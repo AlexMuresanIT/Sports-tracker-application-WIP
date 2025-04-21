@@ -14,7 +14,7 @@ public class OutdoorRunningProducer {
 
   private final KafkaTemplate<String, Object> kafkaTemplate;
 
-  public OutdoorRunningProducer(KafkaTemplate<String, Object> kafkaTemplate) {
+  public OutdoorRunningProducer(final KafkaTemplate<String, Object> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 

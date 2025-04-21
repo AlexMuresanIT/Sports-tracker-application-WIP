@@ -27,7 +27,7 @@ public class SecurityConfig {
   private String ADMIN_PASSWORD;
 
   @Autowired
-  public void configureGlobal(final AuthenticationManagerBuilder auth) {
+  public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
     auth.eraseCredentials(false);
   }
 

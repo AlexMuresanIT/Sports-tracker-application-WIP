@@ -28,15 +28,19 @@ public class WhatsappApiService {
       return;
     }
 
-    final var uri =
-        UriComponentsBuilder.fromUriString(WHATSAPP_URL)
-            .queryParam("phone", phoneNumber)
-            .queryParam("text", whatsappMessage)
-            .queryParam("apikey", API_KEY)
-            .build()
-            .toUri();
+    try {
+      final var uri =
+          UriComponentsBuilder.fromUriString(WHATSAPP_URL)
+              .queryParam("phone", phoneNumber)
+              .queryParam("text", whatsappMessage)
+              .queryParam("apikey", API_KEY)
+              .build()
+              .toUri();
 
-    logger.info("Sending Whatsapp message to {}", phoneNumber);
-    webClient.post().uri(uri).retrieve().bodyToMono(String.class).block();
+      logger.info("Sending Whatsapp message to {}", phoneNumber);
+      webClient.post().uri(uri).retrieve().bodyToMono(String.class).block();
+    } catch (final Exception e) {
+      logger.error("Whatsapp message could not be sent", e);
+    }
   }
 }
