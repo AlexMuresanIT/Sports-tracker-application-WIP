@@ -16,7 +16,6 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,8 +36,7 @@ public class UserControllerTest {
 
   @Autowired protected com.fasterxml.jackson.databind.ObjectMapper objectMapper;
 
-  @MockBean
-  private WhatsappApiService whatsappApiService;
+  @MockBean private WhatsappApiService whatsappApiService;
 
   private static final String ADD_USER = "/register";
   public static final String GET_USER_BY_ID = "/user/id/{id}";
@@ -140,10 +138,12 @@ public class UserControllerTest {
     final var phoneCaptor = ArgumentCaptor.forClass(String.class);
     final var messageCaptor = ArgumentCaptor.forClass(String.class);
 
-    verify(whatsappApiService, times(1)).sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
+    verify(whatsappApiService, times(1))
+        .sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
 
     assertThat(phoneCaptor.getValue()).isEqualTo(user.getPhoneNumber());
-    assertThat(messageCaptor.getValue()).isEqualTo(UPDATE_AGE_MESSAGE.formatted(user.getFirstName(), 26));
+    assertThat(messageCaptor.getValue())
+        .isEqualTo(UPDATE_AGE_MESSAGE.formatted(user.getFirstName(), 26));
   }
 
   @Test
@@ -163,7 +163,8 @@ public class UserControllerTest {
     final var phoneCaptor = ArgumentCaptor.forClass(String.class);
     final var messageCaptor = ArgumentCaptor.forClass(String.class);
 
-    verify(whatsappApiService, times(1)).sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
+    verify(whatsappApiService, times(1))
+        .sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
 
     assertThat(phoneCaptor.getValue()).isEqualTo(user.getPhoneNumber());
     assertThat(messageCaptor.getValue()).isEqualTo(UPDATE_PASSWORD_MESSAGE);
@@ -201,7 +202,8 @@ public class UserControllerTest {
     final var phoneCaptor = ArgumentCaptor.forClass(String.class);
     final var messageCaptor = ArgumentCaptor.forClass(String.class);
 
-    verify(whatsappApiService, times(1)).sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
+    verify(whatsappApiService, times(1))
+        .sendWhatsappMessage(phoneCaptor.capture(), messageCaptor.capture());
 
     assertThat(phoneCaptor.getValue()).isEqualTo(user.getPhoneNumber());
     assertThat(messageCaptor.getValue()).isEqualTo(UPDATE_EMAIL_MESSAGE);
