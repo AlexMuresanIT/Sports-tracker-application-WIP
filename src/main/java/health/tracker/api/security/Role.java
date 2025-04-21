@@ -1,24 +1,19 @@
 package health.tracker.api.security;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public enum Role {
   ADMIN("admin"),
+  USER("user"),
   UNKNOWN("unknown");
 
   private final String name;
 
-  Role(String name) {
+  Role(final String name) {
     this.name = name;
   }
 
-  public Optional<String> getName(String namE) {
-    final var found =
-        Arrays.stream(Role.values())
-            .filter(r -> r.name.equals(namE))
-            .findFirst()
-            .orElse(Role.UNKNOWN);
-    return Optional.of(found.name);
+  public Role getName(final String name) {
+    return Optional.of(Role.valueOf(name)).orElse(Role.ADMIN);
   }
 }

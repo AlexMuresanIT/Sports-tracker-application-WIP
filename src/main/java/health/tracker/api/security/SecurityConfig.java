@@ -20,23 +20,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  @Value("${login.admin.username}")
+  private String ADMIN_USERNAME;
+
+  @Value("${login.admin.password}")
+  private String ADMIN_PASSWORD;
+
   @Autowired
   public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
     auth.eraseCredentials(false);
   }
 
-  @Value("${login.user1.username}")
-  private static String adminUser;
-
-  @Value("${login.user1.password}")
-  private static String adminPassword;
-
   @Bean
   public UserDetailsService userDetailsService() {
     final var admin =
         User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("adminboss"))
+            .username(ADMIN_USERNAME)
+            .password(passwordEncoder().encode(ADMIN_PASSWORD))
             .roles(Role.ADMIN.name())
             .build();
 

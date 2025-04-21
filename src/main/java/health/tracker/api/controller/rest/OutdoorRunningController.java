@@ -58,8 +58,7 @@ public class OutdoorRunningController {
   }
 
   @GetMapping("/best/{email}")
-  public ResponseEntity<OutdoorRunningDTO> getBestRecordForUser(@PathVariable final String email)
-      throws Exception {
+  public ResponseEntity<OutdoorRunningDTO> getBestRecordForUser(@PathVariable final String email) {
     try {
       final var bestRecord = outdoorRunningService.bestRecordForTheUser(email);
       return ResponseEntity.ok(outdoorRunningMapper.toDTO(bestRecord));
