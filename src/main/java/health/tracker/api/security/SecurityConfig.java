@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,23 +20,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  @Value("${login.admin.username}")
+  private String ADMIN_USERNAME;
+
+  @Value("${login.admin.password}")
+  private String ADMIN_PASSWORD;
+
   @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+  public void configureGlobal(final AuthenticationManagerBuilder auth) {
     auth.eraseCredentials(false);
   }
 
-  @Value("${login.user1.username}")
-  private static String adminUser;
-
-  @Value("${login.user1.password}")
-  private static String adminPassword;
-
   @Bean
   public UserDetailsService userDetailsService() {
-    UserDetails admin =
+    final var admin =
         User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("adminboss"))
+            .username(ADMIN_USERNAME)
+            .password(passwordEncoder().encode(ADMIN_PASSWORD))
             .roles(Role.ADMIN.name())
             .build();
 
@@ -45,7 +44,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+  public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
         .securityMatcher("/**")
         .authorizeHttpRequests(request -> request.anyRequest().authenticated())
