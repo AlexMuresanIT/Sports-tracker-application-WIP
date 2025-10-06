@@ -4,9 +4,9 @@ import static health.tracker.api.TestUtil.getUser;
 import static health.tracker.api.config.kafka.KafkaTopicConfiguration.REGISTER_USER;
 import static health.tracker.api.config.kafka.KafkaTopicConfiguration.UPDATE_USER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
+import health.tracker.api.config.HealthTrackerConfig;
 import health.tracker.api.domain.Entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,13 @@ public class UserProducerTest {
 
   private UserProducer userProducer;
 
+  private HealthTrackerConfig healthTrackerConfig;
+
   @BeforeEach
   void setUp() {
-    userProducer = new UserProducer(kafkaTemplate);
+    healthTrackerConfig = new HealthTrackerConfig();
+    healthTrackerConfig.setKafka(new HealthTrackerConfig.Kafka(true));
+    userProducer = new UserProducer(kafkaTemplate, healthTrackerConfig);
   }
 
   @Test

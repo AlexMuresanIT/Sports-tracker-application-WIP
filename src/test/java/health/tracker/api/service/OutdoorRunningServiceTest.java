@@ -31,7 +31,7 @@ public class OutdoorRunningServiceTest {
       new MongoDBContainer("mongo:5.0").withExposedPorts(27017);
 
   @DynamicPropertySource
-  static void containersProperties(DynamicPropertyRegistry registry) {
+  static void containersProperties(final DynamicPropertyRegistry registry) {
     mongoDBContainer.start();
     registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
     registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);

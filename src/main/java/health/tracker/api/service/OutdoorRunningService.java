@@ -26,7 +26,7 @@ public class OutdoorRunningService {
     try {
       userService.getByEmail(outdoorRunning.getUserEmail());
       return outdoorRunningRepository.save(outdoorRunning);
-    } catch (NoUserFoundException e) {
+    } catch (final NoUserFoundException e) {
       LOGGER.info(
           "You cannot add this outdoor running record since there is no user with the email "
               + outdoorRunning.getUserEmail());
@@ -59,7 +59,7 @@ public class OutdoorRunningService {
       throw new Exception("No records for the user with email " + email);
     }
     records.sort(getDistanceComparator());
-    return records.get(0);
+    return records.getFirst();
   }
 
   private Comparator<OutdoorRunning> getDistanceComparator() {
