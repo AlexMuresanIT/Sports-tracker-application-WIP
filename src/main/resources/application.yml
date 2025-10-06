@@ -9,6 +9,24 @@ login:
 scheduling:
   enable: true
 
+health-tracker:
+  daily-reminders:
+    enabled: true
+    drink-water:
+      initial-delay: PT1M
+      interval: PT2H
+    stand-up:
+      initial-delay: PT1M
+      interval: PT1H30M
+    walk-reminder:
+      initial-delay: PT1M
+      interval: PT3H
+    medication-reminder:
+      initial-delay: PT1M
+      interval: PT6H
+  kafka:
+    enabled: false
+
 whatsapp:
   api: "https://api.callmebot.com/whatsapp.php"
   api-key: "6763790"
