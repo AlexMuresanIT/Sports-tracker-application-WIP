@@ -27,8 +27,8 @@ public class UserProducerTest {
 
   @BeforeEach
   void setUp() {
-      healthTrackerConfig = new HealthTrackerConfig();
-        healthTrackerConfig.setKafka(new HealthTrackerConfig.Kafka(true));
+    healthTrackerConfig = new HealthTrackerConfig();
+    healthTrackerConfig.setKafka(new HealthTrackerConfig.Kafka(true));
     userProducer = new UserProducer(kafkaTemplate, healthTrackerConfig);
   }
 
